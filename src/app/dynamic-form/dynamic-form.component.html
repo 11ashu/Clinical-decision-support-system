@@ -1,0 +1,52 @@
+<div class="container">
+    <form [formGroup]="dForm" (ngSubmit)="onSubmit()" *ngIf="drugsFormData">
+        <ng-container *ngFor="let formField of drugsFormData" class="form-group">
+            <ng-container [ngSwitch]="formField.type">
+                <ng-container *ngSwitchCase="'date'">
+                    <div class="form-group">
+                        <label> {{ formField.label }}</label>
+                        <input class="form-control" 
+                                type="{{ formField.type }}"  
+                                [readonly]="formField.isReadonly"
+                              formControlName="{{ formField.key }}" />
+                            <div *ngIf="dForm.get(formField.key)?.dirty || dForm.get(formField.key)?.touched">
+                                <small *ngIf="!dForm.get(formField.key)?.valid">
+                                    {{ formField.label }} is Required
+                                </small>
+                            </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'number'">
+                    <div class="form-group">
+                        <label> {{ formField.label }} ({{"in " + formField?.unit}})</label>
+                        <input class="form-control" 
+                                type="{{ formField.type }}"  
+                              formControlName="{{ formField.key }}" [readonly]="formField.isReadonly" />
+                              <div *ngIf="dForm.get(formField.key)?.dirty || dForm.get(formField.key)?.touched">
+                                    <small *ngIf="!dForm.get(formField.key)?.valid">
+                                        {{ formField.label }} is Required
+                                    </small>
+                              </div>
+                    </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'dropdown'">
+                    <div class="form-group">
+                        <label> {{ formField.label }}</label>
+                        <select  name="" id="" class="form-control form-select" formControlName="{{ formField.key }}">
+                            <option value="" selected>Select {{formField.label}}</option>
+                            <option [value]="item.value" *ngFor="let item of formField.items">{{item.text}}</option>
+                        </select>
+                        <div *ngIf="dForm.get(formField.key)?.dirty || dForm.get(formField.key)?.touched">
+                            <small *ngIf="!dForm.get(formField.key)?.valid">
+                                {{ formField.label }} is Required
+                            </small>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+        <button type="submit" 
+                     class="btn btn-primary mt-3" 
+                     [disabled]="this.dForm.invalid">Submit</button>
+    </form>
+</div>
